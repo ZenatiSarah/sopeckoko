@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@angular/compiler": "^12.1.0"
+  }
+}
