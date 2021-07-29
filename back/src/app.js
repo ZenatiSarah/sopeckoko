@@ -29,12 +29,9 @@ app.use((req, res, next) => {
   next();
 });
 
-
-// app.use(express.urlencoded({extended:false}));
-// app.use(express.json());
 app.use(bodyParser.json());
 
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('./images', express.static(path.join(__dirname, 'images')));
 app.use('/api/sauces', saucesRoute);
 app.use('/api/auth', authRoute);
 

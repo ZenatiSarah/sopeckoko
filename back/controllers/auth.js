@@ -19,10 +19,6 @@ schemaValidator
 .has().not().spaces()
 .is().not().oneOf(['Passw0rd','Password123']);
 
-// const maskEmailOptions = {
-//     maskWith:'*'
-// }
-
 exports.signup = async(req, res, next) => {
     // const encryptedEmail = cryptojs.HmacSHA256(req.body.email, process.env.secureEmail).toString();
 if (!schemaValidator.validate(req.body.password)) {
@@ -30,7 +26,6 @@ if (!schemaValidator.validate(req.body.password)) {
 }
     bcrypt.hash(req.body.password, 10)
     .then(hash => {
-
       const user = new User({
         email: maskData.maskEmail2(req.body.email),
         password: hash
