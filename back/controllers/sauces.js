@@ -35,7 +35,6 @@ switch (like) {
             // UserId se trouve où ?
             const liked = sauce.usersLiked.find(element => element == userId);
             const disliked = sauce.usersDisliked.find(element => element == userId);
-            console.log(liked);
             if (liked) {
                 Sauce.updateOne({ _id: req.params.id }, { $pull: { usersLiked: userId }, $inc: { likes: -1 } })
                     .then(() => res.status(200).json({ message: 'Votre like a été supprimé' }))
@@ -65,15 +64,18 @@ switch (like) {
 
 exports.modifySauce = (req, res, next) =>{
     const saucesObject = req.file ?
+    
     { 
-        ...JSON.parse(req.body.sauces),
+        ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 
     } : { ...req.body };
-    Sauce.findOne({_id:raq.params.id})
+    Sauce.findOne({_id:req.params.id})
     .then(sauce=>{
+        console.log(req.file)
         if (req.file) {
             const filename = sauce.imageUrl.split('/images/')[1];
+            console.log(filename);
             fs.unlink(`images/${filename}`, () =>{
                 Sauce.updateOne({_id:req.params.id},{...saucesObject,_id:req.params.id})
                 .then(() => res.status(200).json({message:"Objet modifié !"}))
@@ -109,7 +111,6 @@ exports.getOneSauce = (req, res, next) =>{
 };
 
 exports.getAllSauces = (req, res, next) =>{
-    console.log("Je récupère mes objets !")
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }));
