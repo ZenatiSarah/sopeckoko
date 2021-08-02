@@ -1,5 +1,5 @@
 require('dotenv').config();
-const express = require ('express');
+const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
@@ -8,18 +8,19 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const hpp = require('hpp')
 
-const saucesRoute =  require('../routes/sauces');
+const saucesRoute = require('../routes/sauces');
 const authRoute = require('../routes/auth');
 
 //Connexion à la base de donnée
 mongoose.connect('mongodb+srv://sopekockoUser:user12345@cluster0.88wfp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
+  {
+    useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex : true,
+    useCreateIndex: true,
 
   })
   .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch((error) => console.log('Connexion à MongoDB échouée ! '+ error));
+  .catch((error) => console.log('Connexion à MongoDB échouée ! ' + error));
 
 //Ajout du middleware Général CORS 
 app.use((req, res, next) => {
@@ -36,6 +37,5 @@ app.use('/api/auth', authRoute);
 
 app.use(helmet());
 app.use(hpp());
-
 
 module.exports = app;
