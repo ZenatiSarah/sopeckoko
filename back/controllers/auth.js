@@ -3,7 +3,8 @@ const userSchema = require('../models/auth');
 const token = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const passwordValidator = require('password-validator');
-const maskData = require('maskdata');
+const cryptojs = require('crypto-js');
+// const HmacSHA256 = require('crypto-js/hmac-sha256')
 
 const User = mongoose.model('User', userSchema);
 //Logique des routes
@@ -20,26 +21,31 @@ schemaValidator
     .is().not().oneOf(['Passw0rd', 'Password123']);
 
 exports.signup = async (req, res, next) => {
-    // const encryptedEmail = cryptojs.HmacSHA256(req.body.email, process.env.secureEmail).toString();
-    if (!schemaValidator.validate(req.body.password)) {
-        res.status(401).json({ message: "Mot de passe faible. Veuillez entrer 8 caractères, 2 chiffres et des majuscules" })
+    const encryptedEmail = cryptojs.HmacSHA256(req.body.email, "email encrypté").toString();
+
+    if (schemaValidator.validate(req.body.password)) {
+        bcrypt.hash(req.body.password, 10)
+            .then(hash => {
+                const user = new User({
+                    email: encryptedEmail,
+                    password: hash
+                });
+                user.save()
+                    .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                    .catch(error => res.status(400).json({ error }));
+            })
+            .catch(error => res.status(500).json({ error }));
+    } else if (!schemaValidator.validate(req.body.password)) {
+        res.status(401).json({ message: "Mot de passe faible. Veuillez entrer 8 caractères, 2 chiffres et des majuscules" });
+
     }
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            const user = new User({
-                email: maskData.maskEmail2(req.body.email),
-                password: hash
-            });
-            user.save()
-                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                .catch(error => res.status(400).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
+
 };
 
 exports.login = (req, res, next) => {
     //trouver le user dans la base de donnée
-    User.findOne({ email: maskData.maskEmail2(req.body.email) })
+    const encryptedEmail = cryptojs.HmacSHA256(req.body.email, "email encrypté").toString();
+    User.findOne({ email: encryptedEmail })
 
         .then(user => {
             if (!user) {

@@ -12,6 +12,9 @@ const saucesRoute = require('../routes/sauces');
 const authRoute = require('../routes/auth');
 
 //Connexion à la base de donnée
+
+
+
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.88wfp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
   {
     useNewUrlParser: true,
