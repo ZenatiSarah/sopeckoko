@@ -12,9 +12,6 @@ const saucesRoute = require('../routes/sauces');
 const authRoute = require('../routes/auth');
 
 //Connexion à la base de donnée
-
-
-
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.88wfp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
   {
     useNewUrlParser: true,
@@ -34,11 +31,12 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+//gestionnaire de routage
 app.use('/images', express.static(path.join(__dirname, '../images')));
 app.use('/api/sauces', saucesRoute);
 app.use('/api/auth', authRoute);
 
-app.use(helmet());
-app.use(hpp());
+app.use(helmet()); //securing routes
+app.use(hpp()); //hidden information or manipulate data
 
 module.exports = app;

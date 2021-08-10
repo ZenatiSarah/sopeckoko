@@ -4,10 +4,7 @@ const token = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const passwordValidator = require('password-validator');
 const cryptojs = require('crypto-js');
-// const HmacSHA256 = require('crypto-js/hmac-sha256')
-
 const User = mongoose.model('User', userSchema);
-//Logique des routes
 
 const schemaValidator = new passwordValidator();
 
@@ -39,7 +36,6 @@ exports.signup = async (req, res, next) => {
         res.status(401).json({ message: "Mot de passe faible. Veuillez entrer 8 caractères, 2 chiffres et des majuscules" });
 
     }
-
 };
 
 exports.login = (req, res, next) => {
